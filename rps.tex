@@ -1,0 +1,268 @@
+
+              
+\documentclass[a4paper, 12pt]{article}
+
+%% Language and font encodings
+\usepackage[magyar]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{xcolor}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=2.5cm,right=2.5cm,marginparwidth=1.75cm]{geometry}
+\usepackage{multicol}
+\usepackage{parskip}
+
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{float}
+
+\begin{document}
+\begin{titlepage}   
+\begin{center}
+\thispagestyle{empty}  
+
+\vspace*{0.7cm}
+\rule{\linewidth}{0.5mm} \\[3mm]
+\vspace*{0.7cm}
+
+{\LARGE Kutinfo}
+
+
+\vspace*{0.7cm}
+\rule{\linewidth}{0.5mm} \\[3mm]
+\rule{\linewidth}{0.5mm} \\[3mm]
+
+
+
+{\Large Kő-papír-olló... \\}
+
+\vspace*{0.7cm}
+\rule{\linewidth}{0.5mm} \\[3mm]
+{\footnotesize Lukovics Márk, Marx Pál Fülöp, Pórfy Barnabás} \\
+
+  \vspace*{2cm}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{./elte.eps}
+\end{center}
+\end{figure}
+\end{center}
+\end{titlepage}
+
+\begin{abstract}
+Egyszerű kő-papír-olló játék C++-ban írva, konzolos bevitellel.
+\end{abstract}
+
+\section{Bevezetés}
+
+\subsection{Mi ez?}
+A kő-papír-olló játékot két ember játszhatja a kezével. 
+
+A játékosok hangosan háromig számolnak vagy a játék nevét, a "kő – papír – olló"-t mondják, minden számolásnál meglendítve a felemelt és ökölbe szorított kezüket. A harmadik számolás után vagy az utána következő ütemben a játékosok kezükkel felveszik a három alakzat egyikét és megmutatják az ellenfelüknek. 
+
+
+A másik változat a csoportkör, amit 3-6 játékos játszhat, ennek során mindenki megszámolja, hány más játékoson aratott győzelmet az adott körben (mindenki egyszerre mutat). Győzelmeit egy-egy pontként jegyezzük, aki előbb szerez minimum 20 pontot (változó, de ennyi az ajánlott), az a nyertes.
+
+\begin{itemize}
+\item kő: a zárt ököl
+\item olló: a kinyújtott, szétnyitott mutató és középső ujj
+\item papír: a nyitott tenyér
+\end{itemize}
+\begin{center}
+\includegraphics[scale=0.3]{kezjelek}
+\end{center}
+
+A játék a legtöbb országban kő, papír, olló-ként népszerű, noha több változat létezik még (pl.: nyúl, puska, répa), és Japánban dzsankennek nevezik, ami tulajdonképpen a kígyó, béka, csiga játék.
+
+Egyes sportokban ezzel a játékkal határozzák meg, melyik csapat kezdi a meccset. Eső esetén néha így döntik el, megtartsák-e a játszmát. Élő szerepjátékokban is használják véletlenek létrehozására, mivel semmiféle felszerelés nem szükséges hozzá. Néha fogadást is kötnek rá, a szerencsejátékokhoz hasonlóan.
+
+\subsection{ Valószínűségek }
+
+A kő-papír ollót néha a pénzfeldobáshoz, a kockadobáshoz vagy a pálcatöréshez hasonlóan egy személy kiválasztásban is használják. Elméletileg mindenkinek ugyanannyi esélye van a győzelemre, de a véletlen választásoktól eltérően azonban itt lehet fejleszteni a játéktechnikát ha több kört játszanak, mert a tapasztalt játékos kiismerheti ellenfele nem-véletlenszerű taktikáját. 
+
+\newpage
+\subsection{ Miért éppen ez?}
+
+A választás azért esett erre a játékra, mert ismertünk egy továbbfejlesztett verziót a játékra, amit le akartunk programozni. Ebben a verzióban 15 különböző lehetőség van.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.25]{rps15}
+\caption{ Kiterjesztett kő-papír-olló}
+\label{fig:rps15}
+\end{figure}
+
+\section{Tervezet}
+
+\subsection{Hogyan működjön? (Első verzió) }\label{Csom}
+
+Az első ötletünk az volt, hogyha ez a játék kiterjeszthető 15-re, akkor ebből következik, hogy az összes egynél nagyobb pozitív páratlan számra használható. 
+
+Ezért mi egy olyan játékot akartunk megvalósítani, aminek az elején a játékos kiválaszthatja, hány elemű játékkal akar játszani.
+
+\newpage
+\subsection{Megvalósítás}
+A megvalósításhoz C++ nyelvet használtuk.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{owncode}
+\caption{ 2n+1-es kő-papír-olló}
+\label{fig:rps2n1}
+\end{figure}
+
+Amikor itt tartottunk, akkor rájöttünk, hogy ezen az úton elindulva a játék megvalósítása túl sok időt venne igénybe. Emiatt úgy döntöttünk, hogy egy másik irányba terjesztjük ki a játékot. Nevezetesen a többkörös játékra.
+
+\subsection{Hogyan müködjön? (Második verzió) }
+
+A tervünk az volt, hogy az eredeti három lehetőséges kő-papír-olló játékot akárhányszor lehessen játszani egymás után. Ehhez elölről kezdtük a kódot. Ebben a verzióban számolja az eredményeket, viszont itt a lehetőségek kis száma miatt, megtehettük, hogy nevezéktant(rk, pr, sc) használunk. Ami még különbség, hogy itt, szintén a korlátozottság miatt, nem volt szükség arra, hogy a program magának generálja a "kiütési párokat", hanem előre beleírhattuk a kódba.
+
+\section{Kód}
+A fent leírt tervezetet az alábbi módon valósítottuk meg:
+
+\begin{lstlisting}[language=C++]
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include <string>
+
+using namespace std;
+
+int rps(int a,int b)
+{
+    /*
+     rock = 0
+     paper = 1
+     scissors = 2
+     */
+    if(a==b)
+        return 0;
+    if((a==1 && b==0) || (a==2 && b==1) || (a==0 && b==2))
+        return 1; //user wins
+    else
+        return 2; //computer wins
+}
+
+int main()
+{
+    int len;
+    int user;
+    int draw = 0;
+    int player = 0;
+    int computer = 0;
+    string rk = "Rock";
+    string pr = "Paper";
+    string sc = "Scissors";
+    
+    string us;
+    string co;
+    
+    cout << "Best out of?" << endl;
+    cin >> len;
+    if(len < 3)
+        len = 3;
+    if(len % 2 == 0)
+        len = len+1;
+    cout << "Best out of: "<< len << endl;
+    int len2 = len;
+    int comp;
+    srand (time(NULL));
+    
+    
+    for(int i = 0; i < len; i++)
+    {
+        comp  = rand() % 3;
+        
+        cout << "Rock(0), Paper(1) or Scissors(2)?"<< endl;
+        cin >>user;
+        while(user < 0 || user > 2)
+        {
+            cout << "Choose 0, 1 or 2" << endl;
+            cin >> user;
+        }
+        if(comp == 0)
+        {
+            co = rk;
+        }
+        if(comp == 1)
+        {
+            co = pr;
+        }
+        if(comp == 2)
+        {
+            co = sc;
+        }
+        if(user == 0)
+        {
+            us = rk;
+        }
+        if(user == 1)
+        {
+            us = pr;
+        }
+        if(user == 2)
+        {
+            us = sc;
+        }
+        
+        cout << "Player: " << us << endl << "Computer: " << co << endl;
+        
+        if(rps(user,comp) == 0)
+        {
+            cout << "Draw!" << endl;
+            len++;
+            draw++;
+        }
+        if(rps(user,comp) == 1)
+        {
+            cout << "Player wins round!" << endl;
+            player++;
+        }
+        if(rps(user,comp) == 2)
+        {
+            cout << "Computer wins round!" << endl;
+            computer++;
+        }
+        cout << " " << endl << "Score: " << endl << "Player: " 
+        << player << endl << "Computer: " << computer << endl
+        << " " << endl;
+        if(computer == len2/2 +1)
+        {
+            cout << "-----Computer wins!----" << endl;
+            cout << " " << endl << "End score: " << endl << "Player: " 
+            << player << endl << "Computer: " << computer << endl 
+            << " " << endl;
+            cout << "----Better luck next time!----";
+            return 0;
+        }
+        if(player == len2/2 +1)
+        {
+            cout << "----Player wins!----" << endl;
+            cout << " " << endl << "End score: ";
+        }
+    }
+    return 0;
+}
+\end{lstlisting}
+
+\section{Ellenőrzés}
+
+Ez a kód a terveinket megvalósítja. Az viszont egyértelműen nem valósul meg, hogy a gép kitalálja, hogy mit fogunk választani. Tehát ha a gép ellen játszunk, akkor tényleg egyenlő esélyeink van. Ellenben azzal, mint hogyha emberek ellen játszanánk.
+
+\section{Diszkusszió}
+
+Amint azt a bevezetésben írtuk, ezt a játékot több irányba tovább lehet fejleszteni. Az első változat egy érdekesebb megközelítése a játéknak, viszont a megvalósítása nagyobb időigénnyel rendelkezik. A második verzió az egyik egyszerűbb változat, viszont könnyebben megvalósítható.
+
+\section{Felhasznált források}
+• https://hu.wikipedia.org/wiki/Kő-pap\%C3\%ADr-olló
+
+• https://tex.stackexchange.com/
+
+• http://www.umop.com/images/rps15.jpg
+\end{document}
